@@ -1,0 +1,39 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: wasel-postgres
+    environment:
+      POSTGRES_DB: wasel
+      POSTGRES_USER: wasel
+      POSTGRES_PASSWORD: wasel
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U wasel -d wasel"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+    container_name: wasel-app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/wasel
+      DB_USERNAME: wasel
+      DB_PASSWORD: wasel
+      APP_BOOTSTRAP_ADMIN_EMAIL: admin@wasel.local
+      APP_BOOTSTRAP_ADMIN_PASSWORD: ChangeMe123!
+      APP_JWT_SECRET: VGhpc0lzQVNlY3VyZUZvckRldk9ubHlTZWNyZXRLZXlGb3JXYXNlbDEyMw==
+      WEATHER_ENABLED: "false"
+    ports:
+      - "8080:8080"
+
+volumes:
+  postgres_data:
