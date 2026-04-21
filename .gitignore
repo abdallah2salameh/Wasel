@@ -18,6 +18,12 @@ target/
 *.iws
 *.iml
 *.ipr
+node_modules/
+.next/
+out/
+frontend/node_modules/
+frontend/.next/
+frontend/out/
 
 ### NetBeans ###
 /nbproject/private/

@@ -169,6 +169,26 @@ Route estimation combines:
 
 This is intentionally heuristic and explainable rather than claiming exact navigation accuracy.
 
+## Frontend
+
+A full web frontend now lives under [frontend](/C:/Users/AbdallahSalameh/IdeaProjects/demo2/frontend). It is built with Next.js App Router and wired directly to the Spring Boot API.
+
+Frontend pages:
+
+- `/` overview dashboard
+- `/incidents` incident browser
+- `/checkpoints` checkpoint browser
+- `/routes` route estimator
+- `/reports` report submission and moderation queue
+- `/alerts` subscription and alert record management
+- `/auth` JWT login and registration
+
+Frontend environment:
+
+- `NEXT_PUBLIC_API_BASE_URL=http://localhost:8080`
+
+The backend now enables CORS for the configured frontend origin so browser requests from `http://localhost:3000` are accepted.
+
 ## Running Locally
 
 ### Maven
@@ -182,6 +202,22 @@ This is intentionally heuristic and explainable rather than claiming exact navig
 ```bash
 docker compose up --build
 ```
+
+### Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Frontend default URL:
+
+- `http://localhost:3000`
+
+Backend default URL:
+
+- `http://localhost:8080`
 
 Default local credentials:
 

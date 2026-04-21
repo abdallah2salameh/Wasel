@@ -1,15 +1,10 @@
-version: "3.9"
-
 services:
   postgres:
     image: postgres:16
-    container_name: wasel-postgres
     environment:
       POSTGRES_DB: wasel
       POSTGRES_USER: wasel
       POSTGRES_PASSWORD: wasel
-    ports:
-      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -20,7 +15,6 @@ services:
 
   app:
     build: .
-    container_name: wasel-app
     depends_on:
       postgres:
         condition: service_healthy
@@ -34,6 +28,17 @@ services:
       WEATHER_ENABLED: "false"
     ports:
       - "8080:8080"
+
+  frontend:
+    build:
+      context: ./frontend
+    depends_on:
+      app:
+        condition: service_started
+    environment:
+      NEXT_PUBLIC_API_BASE_URL: http://localhost:8080
+    ports:
+      - "3000:3000"
 
 volumes:
   postgres_data:
