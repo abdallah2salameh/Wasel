@@ -3,6 +3,8 @@ package com.wasel.backend.mobility.checkpoint;
 import com.wasel.backend.common.PageResponse;
 import com.wasel.backend.common.ResourceNotFoundException;
 import com.wasel.backend.security.UserAccount;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -29,6 +31,7 @@ public class CheckpointService {
     }
 
     @Transactional
+    @CacheEvict(value = "checkpoints", allEntries = true)
     public CheckpointDtos.CheckpointResponse create(CheckpointDtos.CreateCheckpointRequest request, UserAccount actor) {
         Checkpoint checkpoint = new Checkpoint();
         checkpoint.setName(request.name());
@@ -42,6 +45,7 @@ public class CheckpointService {
         return toResponse(checkpoint);
     }
 
+    @Cacheable(value = "checkpoints", key = "#governorate + '-' + #status + '-' + #page + '-' + #size + '-' + #sortBy")
     public PageResponse<CheckpointDtos.CheckpointResponse> list(
             String governorate,
             CheckpointStatus status,
@@ -82,6 +86,7 @@ public class CheckpointService {
     }
 
     @Transactional
+    @CacheEvict(value = "checkpoints", allEntries = true)
     public CheckpointDtos.CheckpointResponse updateStatus(UUID id, CheckpointDtos.UpdateCheckpointStatusRequest request, UserAccount actor) {
         Checkpoint checkpoint = checkpointRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Checkpoint not found"));

@@ -33,7 +33,7 @@ public class RoutingClient {
                 .build();
     }
 
-    @Cacheable("routes")
+    @Cacheable(value = "routes", key = "#originLat + '-' + #originLon + '-' + #destinationLat + '-' + #destinationLon")
     public RouteResult route(double originLat, double originLon, double destinationLat, double destinationLon) {
         if (!properties.enabled()) {
             return null;
@@ -52,7 +52,7 @@ public class RoutingClient {
         return new RouteResult(route.distance(), route.duration(), "OSRM");
     }
 
-    @Cacheable("geocoding")
+    @Cacheable(value = "geocoding", key = "#query")
     public List<GeocodingResult> geocode(String query) {
         if (!properties.enabled()) {
             return List.of();

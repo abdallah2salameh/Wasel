@@ -43,7 +43,8 @@ public class ReportController {
     ) {
         String resolvedFingerprint = fingerprint != null ? fingerprint : servletRequest.getRemoteAddr();
         ReportDtos.ReportResponse response = reportService.submit(request, user, resolvedFingerprint);
-        logger.info("Report submitted successfully by user: {}, category: {}", user.getEmail(), request.category());
+        String userEmail = user != null ? user.getEmail() : "anonymous";
+        logger.info("Report submitted successfully by user: {}, category: {}", userEmail, request.category());
         return response;
     }
 

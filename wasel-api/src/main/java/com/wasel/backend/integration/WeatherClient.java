@@ -26,7 +26,7 @@ public class WeatherClient {
                 .build();
     }
 
-    @Cacheable("weather")
+    @Cacheable(value = "weather", key = "#latitude + '-' + #longitude")
     public WeatherSnapshot current(double latitude, double longitude) {
         if (!properties.enabled() || !StringUtils.hasText(properties.apiKey())) {
             return null;
