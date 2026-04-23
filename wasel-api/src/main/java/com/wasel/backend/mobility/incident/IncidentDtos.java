@@ -1,5 +1,7 @@
 package com.wasel.backend.mobility.incident;
 
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -17,8 +19,8 @@ public class IncidentDtos {
             @Size(min = 10, max = 1500) String description,
             @NotNull IncidentCategory category,
             @NotNull IncidentSeverity severity,
-            @Min(-90) @Max(90) double latitude,
-            @Min(-180) @Max(180) double longitude,
+            @DecimalMin("29.5") @DecimalMax("33.5") double latitude,
+            @DecimalMin("34.0") @DecimalMax("35.5") double longitude,
             UUID checkpointId
     ) {
     }

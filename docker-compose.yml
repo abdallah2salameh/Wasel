@@ -14,7 +14,8 @@ services:
       retries: 5
 
   app:
-    build: .
+    build:
+      context: ./wasel-api
     depends_on:
       postgres:
         condition: service_healthy
@@ -31,7 +32,7 @@ services:
 
   frontend:
     build:
-      context: ./frontend
+      context: ./wasel-ui
     depends_on:
       app:
         condition: service_started
