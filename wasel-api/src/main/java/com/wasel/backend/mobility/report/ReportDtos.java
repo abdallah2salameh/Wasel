@@ -1,6 +1,8 @@
 package com.wasel.backend.mobility.report;
 
 import com.wasel.backend.mobility.incident.IncidentCategory;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -14,8 +16,8 @@ import java.util.UUID;
 public class ReportDtos {
 
     public record CreateReportRequest(
-            @Min(-90) @Max(90) double latitude,
-            @Min(-180) @Max(180) double longitude,
+            @DecimalMin("29.5") @DecimalMax("33.5") double latitude,
+            @DecimalMin("34.0") @DecimalMax("35.5") double longitude,
             @NotNull IncidentCategory category,
             @Size(min = 10, max = 1000) String description
     ) {

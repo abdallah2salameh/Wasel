@@ -48,6 +48,7 @@ public class ReportService {
             String clientFingerprint
     ) {
         enforceSubmissionGuard(user, clientFingerprint);
+        validateDescription(request.description());
         CrowdReport report = new CrowdReport();
         report.setLatitude(request.latitude());
         report.setLongitude(request.longitude());
@@ -205,5 +206,20 @@ public class ReportService {
                 report.getDuplicateOfReportId(),
                 report.getSubmittedBy() != null ? report.getSubmittedBy().getEmail() : "anonymous"
         );
+    }
+
+    private void validateDescription(String description) {
+        // Check for suspicious links
+        if (description.contains("http://") || description.contains("https://")) {
+            throw new BadRequestException("Suspicious links detected in description");
+        }
+        // Check for repeated words (simple spam detection)
+        String[] words = description.toLowerCase().split("\\s+");
+        for (String word : words) {
+            long count = java.util.Arrays.stream(words).filter(w -> w.equals(word)).count();
+            if (count > 5) { // If a word repeats more than 5 times, consider it spam
+                throw new BadRequestException("Repeated words detected, possible spam");
+            }
+        }
     }
 }

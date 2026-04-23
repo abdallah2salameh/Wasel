@@ -4,6 +4,8 @@ import com.wasel.backend.common.PageResponse;
 import com.wasel.backend.security.UserAccount;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -23,6 +25,8 @@ import java.util.UUID;
 @RequestMapping("/api/v1/reports")
 public class ReportController {
 
+    private static final Logger logger = LoggerFactory.getLogger(ReportController.class);
+
     private final ReportService reportService;
 
     public ReportController(ReportService reportService) {
@@ -38,7 +42,9 @@ public class ReportController {
             HttpServletRequest servletRequest
     ) {
         String resolvedFingerprint = fingerprint != null ? fingerprint : servletRequest.getRemoteAddr();
-        return reportService.submit(request, user, resolvedFingerprint);
+        ReportDtos.ReportResponse response = reportService.submit(request, user, resolvedFingerprint);
+        logger.info("Report submitted successfully by user: {}, category: {}", user.getEmail(), request.category());
+        return response;
     }
 
     @GetMapping
